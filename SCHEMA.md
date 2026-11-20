@@ -51,10 +51,10 @@ schema does not define is a key no consumer will read.
 | `schema_version` | required | required | Integer. This corpus is `1`; see section 7. |
 | `id` | required | required | Kebab-case, equal to the directory name. |
 | `kind` | required | required | `captured` or `synthetic`. |
-| `scenario` | required | required | One sentence on what the shape is for, in plain words. |
+| `scenario` | required | required | One printable, single-line sentence on what the shape is for, in plain words, at most 200 characters; no control characters or newlines. |
 | `account_id` | required | required | `G...` ed25519 account id, checksum included. |
 | `network` | required | required | `public` or `testnet`. |
-| `shape` | required | required | Sorted list of the labels in section 5. |
+| `shape` | required | required | Sorted list of the labels in section 5, each label at most once. |
 | `source_url` | required | forbidden | The exact URL that was read. |
 | `captured_at` | required | forbidden | `YYYY-MM-DDTHH:MM:SSZ`, UTC, not in the future. |
 | `ledger` | required | forbidden | `last_modified_ledger` of the resource, positive. |
@@ -124,7 +124,9 @@ Two reading notes:
   reads as absent or zero rather than raising. Types the schema does not police are a
   validator concern, not a crash.
 
-`scenario` is prose and is not checked beyond the `synthetic:` prefix. Keep the numbers in
+`scenario` is one printable, single-line sentence of at most 200 characters. `validate.py`
+refuses control characters, newlines, non-string values and longer text, and
+`tools/capture.py` refuses the same values before it makes a request. Keep the numbers in
 it out of the way: it describes why a fixture exists, and `shape` is the machine-readable
 part.
 
